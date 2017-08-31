@@ -1,5 +1,4 @@
-# Udemy-Machine-Learning
-Created 8/30/2017#data preprocessing
+#data preprocessing
 #importing the libraries
 
 #import 3 essential libraries
@@ -8,7 +7,7 @@ import matplotlib.pyplot as plt #used for plotting
 import pandas as pd #used for importing and managing datasets
 
 #importing dataset
-dataset = pd.read_csv('Data.csv')
+dataset = pd.read_csv('../Data-Preprocessing/Data.csv')
 
 #create matrix of features in addition to the object of what is read in
 #also create matrix of each independent variable (matrix of features)
@@ -40,7 +39,22 @@ onehotencoder = OneHotEncoder(categorical_features = [0]) #specifies column to h
 x = onehotencoder.fit_transform(x).toarray() #encodes x at column 0
 #creates three binary columns indicating incidence
 labelencoder_y = LabelEncoder() #instantiates class
-y[:,0]=labelencoder_y.fit_transform(y) #changes dependent values to encoded
+y[:,0]=labelencoder_y.fit_transform(y[:,0]) #changes dependent values to encoded
 #creates two binary columns indicating incidence
 
+#data should be split into two sets -- training set and test set
+#machine learning understands correlations through training and testing
+#cross-validation library is used
+from sklearn.cross_validation import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size = 0.25, random_state=0) #.2-.3 is good size for testing set size
 
+#feature scaling -- machine learning uses Euclidean distances to be able to see distances and changes
+#this Euclidean distance sqrt((x2-x1)**2-(y2-y1)**2) can be dominated by large variables
+#scaling solves this problem
+from sklearn.preprocessing import StandardScaler
+sc_x = StandardScaler()
+x_train - sc_x.fit_transform(x_train)
+x_test - sc_x.transform(x_test) #fit can be removed because it is already fitted
+#do dummy variables need to be scaled? -- depends on context
+#not scaling does not break model but scaling dummy variables yields greater accuracy
+#do dependent categorical variables need to be scaled? -- depends on context but in this no, this is a classification problem but yes in cases of regression with many y variables
